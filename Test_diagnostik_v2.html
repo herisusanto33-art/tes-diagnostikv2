@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Diagnostik Informatika Kelas X</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #eef2ff;
+            --primary-dark: #3a56d4;
+            --secondary: #ff6b6b;
+            --accent: #ffd166;
+            --neutral-dark: #2b2d42;
+            --neutral: #8d99ae;
+            --neutral-light: #edf2f4;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(circle at 25px 25px, rgba(67, 97, 238, 0.15) 2%, transparent 0%), 
+                radial-gradient(circle at 75px 75px, rgba(67, 97, 238, 0.1) 2%, transparent 0%);
+            background-size: 100px 100px;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .app-container {
+            max-width: 900px;
+            margin: 0 auto;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+        
+        .quiz-container {
+            background-color: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .option-btn {
+            transition: all 0.3s ease;
+            border: 2px solid var(--neutral-light);
+        }
+        
+        .option-btn:hover {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .option-btn.selected {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+        
+        .progress-bar {
+            height: 10px;
+            border-radius: 5px;
+            background-color: var(--neutral-light);
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(30px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.4s ease forwards;
+        }
+        
+        .welcome-container, .quiz-main-container, .result-container {
+            display: none;
+        }
+        
+        .welcome-container.active, .quiz-main-container.active, .result-container.active {
+            display: block;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .timer {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .timer.warning {
+            color: var(--secondary);
+            animation: pulse 1s infinite;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .category-badge {
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+        }
+        
+        .question-number {
+            color: var(--neutral);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234361ee' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            opacity: 0.8;
+            animation: confetti 5s ease-in-out infinite;
+        }
+        
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        .nav-dots {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+        
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--neutral-light);
+            margin: 0 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-dot.active {
+            background-color: var(--primary);
+            transform: scale(1.3);
+        }
+        
+        .question-card {
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="quiz-container">
+            <!-- Welcome Screen -->
+            <div class="welcome-container active fade-in" id="welcome-container">
+                <div class="header-pattern bg-white p-8 rounded-t-3xl">
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-light mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <h1 class="text-3xl md:text-4xl font-bold text-neutral-dark mb-2">Test Diagnostik Informatika</h1>
+                        <p class="text-neutral max-w-md mx-auto">Uji pemahaman Anda tentang dasar-dasar informatika dengan 10 soal pilihan ganda.</p>
+                    </div>
+                </div>
+                
+                <div class="p-6 md:p-8">
+                    <div class="bg-primary-light p-6 rounded-xl mb-8">
+                        <h2 class="text-xl font-semibold text-neutral-dark mb-4">Data Peserta</h2>
+                        <form id="student-form" class="space-y-6">
+                            <div>
+                                <label for="student-name" class="block text-sm font-medium text-neutral-dark mb-1">Nama Lengkap</label>
+                                <input type="text" id="student-name" name="student-name" required
+                                    class="w-full px-4 py-3 rounded-lg border border-neutral-light focus:border-primary transition duration-300"
+                                    placeholder="Masukkan nama lengkap Anda">
+                            </div>
+                            
+                            <div>
+                                <label for="student-class" class="block text-sm font-medium text-neutral-dark mb-1">Kelas</label>
+                                <select id="student-class" name="student-class" required
+                                    class="w-full px-4 py-3 rounded-lg border border-neutral-light focus:border-primary transition duration-300">
+                                    <option value="" disabled selected>Pilih kelas Anda</option>
+                                    <option value="XAPH3">XAPH3</option>
+                                    <option value="XBU1">XBU1</option>
+                                    <option value="XBU2">XBU2</option>
+                                    <option value="XBU3">XBU3</option>
+                                    <option value="XBU4">XBU4</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" id="start-test-btn" 
+                                class="w-full btn-primary font-medium py-3 px-6 rounded-full transition duration-300 flex items-center justify-center">
+                                <span>Mulai Test</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div class="bg-white p-5 rounded-xl border border-neutral-light">
+                        <h3 class="font-semibold text-neutral-dark mb-3">Informasi Test</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span class="text-sm text-neutral-dark">Test terdiri dari 10 soal pilihan ganda yang dipilih secara acak</span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span class="text-sm text-neutral-dark">Waktu pengerjaan <strong>20 menit</strong></span>
+                            </li>
+                            <li class="flex items-start">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary mr-2 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span class="text-sm text-neutral-dark">Soal mencakup berbagai topik dasar informatika</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quiz Main Container -->
+            <div class="quiz-main-container fade-in" id="quiz-main-container">
+                <div class="bg-white p-6 md:p-8 border-b">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <h1 class="text-2xl font-bold text-neutral-dark">Test Diagnostik Informatika</h1>
+                            <p id="student-info" class="text-sm text-neutral mt-1"></p>
+                        </div>
+                        
+                        <!-- Timer -->
+                        <div class="bg-primary-light px-4 py-2 rounded-lg flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-primary mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <div class="text-xs text-neutral-dark font-medium">Sisa Waktu</div>
+                                <div id="timer" class="timer text-lg font-bold text-primary">20:00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 md:p-8">
+                    <div class="mb-6">
+                        <div class="flex justify-between text-sm text-neutral mb-2">
+                            <span>Progres</span>
+                            <span id="progress-text">0/10</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress" id="progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div id="quiz-content" class="mb-8">
+                        <!-- Questions will be inserted here -->
+                    </div>
+                    
+                    <div class="nav-dots" id="question-nav">
+                        <!-- Navigation dots will be inserted here -->
+                    </div>
+
+                    <div class="mt-8 flex justify-between">
+                        <button id="prev-btn" class="flex items-center text-primary font-medium py-2 px-4 rounded-full hover:bg-primary-light transition duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Sebelumnya
+                        </button>
+                        
+                        <button id="next-btn" class="flex items-center text-primary font-medium py-2 px-4 rounded-full hover:bg-primary-light transition duration-300">
+                            Selanjutnya
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="mt-8 text-center" id="submit-container">
+                        <button id="submit-btn" class="btn-primary font-medium py-3 px-8 rounded-full transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Kirim Jawaban
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Container -->
+            <div class="result-container fade-in" id="result-container">
+                <div class="relative overflow-hidden bg-white p-8 text-center">
+                    <div id="confetti-container" class="absolute inset-0 overflow-hidden"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary-light mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        
+                        <h2 class="text-2xl md:text-3xl font-bold text-neutral-dark mb-2">Hasil Test Diagnostik</h2>
+                        <p id="result-student-info" class="text-neutral mb-6"></p>
+                        
+                        <div class="bg-primary-light w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <p class="text-4xl font-bold text-primary" id="score-display">0/10</p>
+                        </div>
+                        
+                        <p class="text-neutral-dark mb-8 max-w-md mx-auto" id="feedback-text"></p>
+                        
+                        <div class="flex flex-col md:flex-row gap-4 justify-center">
+                            <button id="show-answers-btn" class="btn-primary font-medium py-3 px-6 rounded-full transition duration-300 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                                Lihat Jawaban
+                            </button>
+                            
+                            <button id="restart-btn" class="border-2 border-primary text-primary hover:bg-primary-light font-medium py-3 px-6 rounded-full transition duration-300 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                Coba Lagi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Answer Review Section -->
+                <div id="answers-review" class="p-6 md:p-8 hidden">
+                    <h3 class="text-xl font-bold text-neutral-dark mb-4">Pembahasan Jawaban</h3>
+                    <div id="answers-container" class="space-y-6">
+                        <!-- Answers will be inserted here -->
+                    </div>
+                    
+                    <div class="mt-8 text-center">
+                        <button id="back-to-results-btn" class="btn-primary font-medium py-3 px-6 rounded-full transition duration-300">
+                            Kembali ke Hasil
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center text-xs text-neutral mt-6">
+            © 2023 Test Diagnostik Informatika Kelas X
+        </div>
+    </div>
+
+    <script>
+        // Bank soal dengan 30 pertanyaan
+        const questionBank = [
+            // Kategori: Pengenalan Komputer
+            {
+                question: "Apa yang dimaksud dengan CPU dalam komputer?",
+                options: [
+                    "Central Processing Unit - unit yang memproses semua instruksi komputer",
+                    "Computer Personal Unit - unit komputer pribadi",
+                    "Central Personal Usage - penggunaan pribadi pusat",
+                    "Computer Processing Usage - penggunaan pemrosesan komputer"
+                ],
+                correctIndex: 0,
+                explanation: "CPU (Central Processing Unit) adalah komponen utama komputer yang bertugas memproses instruksi dan data, serta mengontrol operasi komponen lainnya. CPU sering disebut sebagai 'otak' komputer.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>`,
+                category: "Pengenalan Komputer"
+            },
+            {
+                question: "Apa yang dimaksud dengan istilah 'hardware' pada komputer?",
+                options: [
+                    "Program yang dijalankan pada komputer",
+                    "Komponen fisik yang membentuk sistem komputer",
+                    "Sistem operasi komputer",
+                    "File yang tersimpan dalam komputer"
+                ],
+                correctIndex: 1,
+                explanation: "Hardware adalah komponen fisik komputer yang dapat dilihat dan disentuh, seperti monitor, keyboard, CPU, dan hard disk. Hardware bekerja bersama software untuk menjalankan fungsi komputer.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>`,
+                category: "Pengenalan Komputer"
+            },
+            {
+                question: "Apa fungsi utama dari motherboard dalam komputer?",
+                options: [
+                    "Menyimpan data secara permanen",
+                    "Menampilkan gambar pada monitor",
+                    "Menghubungkan semua komponen komputer",
+                    "Memproses instruksi komputer"
+                ],
+                correctIndex: 2,
+                explanation: "Motherboard adalah papan sirkuit utama yang menghubungkan semua komponen komputer seperti CPU, RAM, hard drive, dan kartu grafis. Motherboard menyediakan jalur komunikasi antar komponen sehingga dapat bekerja bersama.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>`,
+                category: "Pengenalan Komputer"
+            },
+            {
+                question: "Apa yang dimaksud dengan istilah 'booting' pada komputer?",
+                options: [
+                    "Proses mematikan komputer",
+                    "Proses menghapus data dari komputer",
+                    "Proses menghidupkan dan memulai sistem komputer",
+                    "Proses menginstal program baru"
+                ],
+                correctIndex: 2,
+                explanation: "Booting adalah proses menghidupkan komputer dan memuat sistem operasi ke dalam memori. Proses ini melibatkan beberapa tahap seperti POST (Power-On Self Test), memuat bootloader, dan akhirnya memuat sistem operasi.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>`,
+                category: "Pengenalan Komputer"
+            },
+            {
+                question: "Apa yang dimaksud dengan istilah 'software' pada komputer?",
+                options: [
+                    "Komponen fisik komputer",
+                    "Program dan data yang dijalankan pada komputer",
+                    "Kabel yang menghubungkan komputer",
+                    "Alat input komputer"
+                ],
+                correctIndex: 1,
+                explanation: "Software adalah program dan data yang dijalankan pada komputer. Software memberikan instruksi kepada hardware tentang apa yang harus dilakukan. Contoh software meliputi sistem operasi, aplikasi, dan driver perangkat.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`,
+                category: "Pengenalan Komputer"
+            },
+            
+            // Kategori: Sistem Operasi
+            {
+                question: "Manakah dari berikut ini yang merupakan sistem operasi?",
+                options: [
+                    "Microsoft Word",
+                    "Adobe Photoshop",
+                    "Windows 10",
+                    "Google Chrome"
+                ],
+                correctIndex: 2,
+                explanation: "Windows 10 adalah sistem operasi yang mengelola hardware dan software komputer. Microsoft Word, Adobe Photoshop, dan Google Chrome adalah aplikasi yang berjalan di atas sistem operasi, bukan sistem operasi itu sendiri.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`,
+                category: "Sistem Operasi"
+            },
+            {
+                question: "Apa fungsi utama sistem operasi pada komputer?",
+                options: [
+                    "Menjalankan aplikasi perkantoran",
+                    "Mengelola sumber daya perangkat keras dan perangkat lunak",
+                    "Menyimpan data secara permanen",
+                    "Menghubungkan komputer ke internet"
+                ],
+                correctIndex: 1,
+                explanation: "Fungsi utama sistem operasi adalah mengelola sumber daya perangkat keras dan perangkat lunak komputer. Sistem operasi bertindak sebagai perantara antara pengguna dan hardware, mengatur memori, proses, file, dan perangkat input/output.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`,
+                category: "Sistem Operasi"
+            },
+            {
+                question: "Manakah dari berikut ini yang merupakan contoh sistem operasi open source?",
+                options: [
+                    "Windows 10",
+                    "macOS",
+                    "Linux",
+                    "MS-DOS"
+                ],
+                correctIndex: 2,
+                explanation: "Linux adalah sistem operasi open source, yang berarti kode sumbernya tersedia untuk umum dan dapat dimodifikasi. Windows 10, macOS, dan MS-DOS adalah sistem operasi proprietary yang kode sumbernya tidak tersedia untuk umum.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`,
+                category: "Sistem Operasi"
+            },
+            {
+                question: "Apa yang dimaksud dengan multitasking dalam sistem operasi?",
+                options: [
+                    "Kemampuan untuk menjalankan beberapa program secara bersamaan",
+                    "Kemampuan untuk menginstal beberapa sistem operasi",
+                    "Kemampuan untuk menghubungkan beberapa komputer",
+                    "Kemampuan untuk menyimpan beberapa file"
+                ],
+                correctIndex: 0,
+                explanation: "Multitasking adalah kemampuan sistem operasi untuk menjalankan beberapa program secara bersamaan. Sistem operasi modern menggunakan teknik seperti time-sharing untuk membagi waktu CPU di antara berbagai proses yang berjalan.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`,
+                category: "Sistem Operasi"
+            },
+            {
+                question: "Apa fungsi dari file explorer/finder dalam sistem operasi?",
+                options: [
+                    "Menjalankan program antivirus",
+                    "Mengelola dan menjelajahi file dan folder",
+                    "Mengatur pengaturan jaringan",
+                    "Menjalankan aplikasi web"
+                ],
+                correctIndex: 1,
+                explanation: "File explorer (Windows) atau Finder (macOS) adalah aplikasi bawaan sistem operasi yang memungkinkan pengguna untuk mengelola dan menjelajahi file dan folder. Pengguna dapat membuat, menghapus, memindahkan, dan mengatur file melalui antarmuka grafis.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>`,
+                category: "Sistem Operasi"
+            },
+            
+            // Kategori: Perangkat Keras
+            {
+                question: "Apa fungsi utama RAM dalam komputer?",
+                options: [
+                    "Menyimpan data secara permanen",
+                    "Menyimpan data sementara saat komputer bekerja",
+                    "Menampilkan gambar pada monitor",
+                    "Menghubungkan komputer ke internet"
+                ],
+                correctIndex: 1,
+                explanation: "RAM (Random Access Memory) berfungsi untuk menyimpan data sementara saat komputer bekerja. RAM menyimpan data yang sedang diproses oleh CPU, sehingga dapat diakses dengan cepat. Data dalam RAM akan hilang ketika komputer dimatikan.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>`,
+                category: "Perangkat Keras"
+            },
+            {
+                question: "Manakah dari berikut ini yang merupakan contoh perangkat input?",
+                options: [
+                    "Monitor",
+                    "Printer",
+                    "Speaker",
+                    "Keyboard"
+                ],
+                correctIndex: 3,
+                explanation: "Keyboard adalah perangkat input yang digunakan untuk memasukkan data ke komputer melalui penekanan tombol. Monitor, printer, dan speaker adalah perangkat output yang menampilkan, mencetak, atau memainkan data dari komputer.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" /></svg>`,
+                category: "Perangkat Keras"
+            },
+            {
+                question: "Apa fungsi utama dari hard disk drive (HDD) dalam komputer?",
+                options: [
+                    "Memproses instruksi komputer",
+                    "Menyimpan data secara permanen",
+                    "Menampilkan gambar pada monitor",
+                    "Menghubungkan komputer ke internet"
+                ],
+                correctIndex: 1,
+                explanation: "Hard Disk Drive (HDD) berfungsi untuk menyimpan data secara permanen, bahkan ketika komputer dimatikan. HDD menyimpan sistem operasi, program, dan file pengguna dengan kapasitas penyimpanan yang besar.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>`,
+                category: "Perangkat Keras"
+            },
+            {
+                question: "Manakah dari berikut ini yang merupakan contoh perangkat output?",
+                options: [
+                    "Mouse",
+                    "Keyboard",
+                    "Scanner",
+                    "Printer"
+                ],
+                correctIndex: 3,
+                explanation: "Printer adalah perangkat output yang menghasilkan salinan fisik (cetakan) dari data digital. Mouse, keyboard, dan scanner adalah perangkat input yang digunakan untuk memasukkan data ke komputer.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>`,
+                category: "Perangkat Keras"
+            },
+            {
+                question: "Apa perbedaan utama antara SSD dan HDD?",
+                options: [
+                    "SSD lebih murah daripada HDD",
+                    "SSD tidak memiliki komponen yang bergerak dan lebih cepat",
+                    "HDD memiliki kapasitas yang lebih besar daripada SSD",
+                    "HDD menggunakan lebih sedikit daya daripada SSD"
+                ],
+                correctIndex: 1,
+                explanation: "Perbedaan utama antara SSD (Solid State Drive) dan HDD (Hard Disk Drive) adalah SSD tidak memiliki komponen yang bergerak dan lebih cepat. SSD menggunakan chip memori flash untuk menyimpan data, sementara HDD menggunakan piringan magnetik yang berputar.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>`,
+                category: "Perangkat Keras"
+            },
+            
+            // Kategori: Perangkat Lunak
+            {
+                question: "Manakah dari berikut ini yang termasuk perangkat lunak aplikasi?",
+                options: [
+                    "Windows 10",
+                    "BIOS",
+                    "Microsoft Excel",
+                    "Driver kartu grafis"
+                ],
+                correctIndex: 2,
+                explanation: "Microsoft Excel adalah perangkat lunak aplikasi yang digunakan untuk membuat dan mengedit spreadsheet. Windows 10 adalah sistem operasi, BIOS adalah firmware, dan driver kartu grafis adalah perangkat lunak sistem.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`,
+                category: "Perangkat Lunak"
+            },
+            {
+                question: "Apa yang dimaksud dengan perangkat lunak sistem?",
+                options: [
+                    "Program yang digunakan untuk membuat dokumen",
+                    "Program yang mengelola dan mengontrol perangkat keras komputer",
+                    "Program yang digunakan untuk mengedit foto",
+                    "Program yang digunakan untuk browsing internet"
+                ],
+                correctIndex: 1,
+                explanation: "Perangkat lunak sistem adalah program yang mengelola dan mengontrol perangkat keras komputer. Contohnya termasuk sistem operasi, driver perangkat, dan utilitas sistem yang memungkinkan hardware dan software lain bekerja bersama.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`,
+                category: "Perangkat Lunak"
+            },
+            {
+                question: "Apa yang dimaksud dengan firmware?",
+                options: [
+                    "Program yang digunakan untuk browsing internet",
+                    "Program yang digunakan untuk membuat dokumen",
+                    "Program yang tertanam dalam perangkat keras untuk mengontrol fungsinya",
+                    "Program yang digunakan untuk mengedit video"
+                ],
+                correctIndex: 2,
+                explanation: "Firmware adalah program yang tertanam dalam perangkat keras untuk mengontrol fungsinya. Firmware berada di antara hardware dan software, dan biasanya disimpan dalam ROM atau flash memory. Contohnya termasuk BIOS/UEFI pada motherboard.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`,
+                category: "Perangkat Lunak"
+            },
+            {
+                question: "Apa yang dimaksud dengan open source software?",
+                options: [
+                    "Software yang hanya dapat digunakan secara online",
+                    "Software yang kode sumbernya tersedia dan dapat dimodifikasi",
+                    "Software yang hanya dapat digunakan pada sistem operasi tertentu",
+                    "Software yang hanya dapat digunakan oleh satu pengguna"
+                ],
+                correctIndex: 1,
+                explanation: "Open source software adalah software yang kode sumbernya tersedia untuk umum dan dapat dimodifikasi. Pengguna dapat melihat, mengubah, dan mendistribusikan kode sesuai dengan lisensi tertentu. Contohnya termasuk Linux, Firefox, dan LibreOffice.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`,
+                category: "Perangkat Lunak"
+            },
+            {
+                question: "Apa yang dimaksud dengan update perangkat lunak?",
+                options: [
+                    "Proses menginstal perangkat lunak baru",
+                    "Proses menghapus perangkat lunak",
+                    "Proses memperbaiki bug dan menambahkan fitur baru pada perangkat lunak",
+                    "Proses mengubah nama perangkat lunak"
+                ],
+                correctIndex: 2,
+                explanation: "Update perangkat lunak adalah proses memperbaiki bug dan menambahkan fitur baru pada perangkat lunak yang sudah ada. Update dapat meningkatkan keamanan, kinerja, dan fungsionalitas software, serta memperbaiki masalah yang ditemukan setelah rilis.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>`,
+                category: "Perangkat Lunak"
+            },
+            
+            // Kategori: Keamanan Data
+            {
+                question: "Manakah dari berikut ini yang merupakan contoh praktik keamanan data yang baik?",
+                options: [
+                    "Menggunakan password yang sama untuk semua akun",
+                    "Membagikan informasi login dengan teman",
+                    "Menggunakan password yang kuat dan berbeda untuk setiap akun",
+                    "Mengabaikan pembaruan keamanan perangkat lunak"
+                ],
+                correctIndex: 2,
+                explanation: "Menggunakan password yang kuat dan berbeda untuk setiap akun adalah praktik keamanan data yang baik. Hal ini mencegah akses tidak sah ke akun lain jika satu akun disusupi. Password yang kuat biasanya panjang, mengandung kombinasi huruf, angka, dan simbol.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>`,
+                category: "Keamanan Data"
+            },
+            {
+                question: "Apa yang dimaksud dengan malware?",
+                options: [
+                    "Program yang membantu melindungi komputer dari serangan",
+                    "Program yang dirancang untuk merusak atau mengakses sistem tanpa izin",
+                    "Program yang mempercepat kinerja komputer",
+                    "Program yang membantu mengatur file pada komputer"
+                ],
+                correctIndex: 1,
+                explanation: "Malware (malicious software) adalah program yang dirancang untuk merusak atau mengakses sistem tanpa izin. Jenis malware termasuk virus, worm, trojan, ransomware, dan spyware. Malware dapat mencuri data, merusak sistem, atau menggunakan sumber daya komputer tanpa izin.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`,
+                category: "Keamanan Data"
+            },
+            {
+                question: "Apa yang dimaksud dengan enkripsi data?",
+                options: [
+                    "Proses menghapus data secara permanen",
+                    "Proses mengubah data menjadi format yang tidak dapat dibaca tanpa kunci",
+                    "Proses memindahkan data dari satu perangkat ke perangkat lain",
+                    "Proses membuat salinan data"
+                ],
+                correctIndex: 1,
+                explanation: "Enkripsi data adalah proses mengubah data menjadi format yang tidak dapat dibaca tanpa kunci dekripsi. Enkripsi melindungi data dari akses tidak sah dengan mengacak informasi menggunakan algoritma matematika. Hanya pihak dengan kunci yang benar yang dapat mendekripsi dan membaca data asli.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>`,
+                category: "Keamanan Data"
+            },
+            {
+                question: "Apa yang dimaksud dengan phishing?",
+                options: [
+                    "Teknik untuk mempercepat koneksi internet",
+                    "Teknik untuk memulihkan data yang hilang",
+                    "Teknik penipuan untuk mendapatkan informasi pribadi dengan menyamar sebagai entitas terpercaya",
+                    "Teknik untuk mengoptimalkan kinerja komputer"
+                ],
+                correctIndex: 2,
+                explanation: "Phishing adalah teknik penipuan untuk mendapatkan informasi pribadi dengan menyamar sebagai entitas terpercaya. Penipu biasanya mengirim email atau pesan yang tampak sah, meminta korban untuk mengklik tautan atau memberikan informasi sensitif seperti password atau data kartu kredit.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`,
+                category: "Keamanan Data"
+            },
+            {
+                question: "Apa fungsi utama firewall dalam keamanan komputer?",
+                options: [
+                    "Mempercepat koneksi internet",
+                    "Memantau dan mengontrol lalu lintas jaringan berdasarkan aturan keamanan",
+                    "Menyimpan data secara aman",
+                    "Menghapus file yang tidak diinginkan"
+                ],
+                correctIndex: 1,
+                explanation: "Fungsi utama firewall adalah memantau dan mengontrol lalu lintas jaringan berdasarkan aturan keamanan. Firewall bertindak sebagai penghalang antara jaringan yang dipercaya dan tidak dipercaya, memblokir akses tidak sah dan mencegah serangan berbahaya.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>`,
+                category: "Keamanan Data"
+            },
+            
+            // Kategori: Berpikir Komputasional
+            {
+                question: "Apa yang dimaksud dengan algoritma dalam konteks pemrograman?",
+                options: [
+                    "Bahasa pemrograman tingkat tinggi",
+                    "Urutan langkah-langkah untuk menyelesaikan masalah",
+                    "Perangkat keras komputer",
+                    "Jenis virus komputer"
+                ],
+                correctIndex: 1,
+                explanation: "Algoritma adalah urutan langkah-langkah yang terdefinisi dengan jelas untuk menyelesaikan masalah. Dalam pemrograman, algoritma adalah dasar dari setiap program komputer, menjelaskan secara tepat bagaimana tugas harus dilakukan.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>`,
+                category: "Berpikir Komputasional"
+            },
+            {
+                question: "Apa yang dimaksud dengan dekomposisi dalam berpikir komputasional?",
+                options: [
+                    "Mengidentifikasi pola dalam data",
+                    "Memecah masalah kompleks menjadi bagian-bagian kecil",
+                    "Menghapus detail yang tidak perlu",
+                    "Membuat langkah-langkah untuk menyelesaikan masalah"
+                ],
+                correctIndex: 1,
+                explanation: "Dekomposisi dalam berpikir komputasional adalah proses memecah masalah kompleks menjadi bagian-bagian kecil yang lebih mudah dipahami dan diselesaikan. Dengan memecah masalah, kita dapat fokus pada satu bagian pada satu waktu dan menyelesaikan masalah secara bertahap.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>`,
+                category: "Berpikir Komputasional"
+            },
+            {
+                question: "Apa yang dimaksud dengan abstraksi dalam berpikir komputasional?",
+                options: [
+                    "Memecah masalah menjadi bagian-bagian kecil",
+                    "Mengidentifikasi pola dalam data",
+                    "Menyederhanakan masalah dengan menghilangkan detail yang tidak perlu",
+                    "Membuat langkah-langkah untuk menyelesaikan masalah"
+                ],
+                correctIndex: 2,
+                explanation: "Abstraksi dalam berpikir komputasional adalah proses menyederhanakan masalah dengan menghilangkan detail yang tidak perlu. Abstraksi membantu kita fokus pada aspek penting dari masalah dan mengabaikan detail yang tidak relevan, membuat masalah lebih mudah dipahami dan diselesaikan.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" /></svg>`,
+                category: "Berpikir Komputasional"
+            },
+            {
+                question: "Apa yang dimaksud dengan pengenalan pola dalam berpikir komputasional?",
+                options: [
+                    "Memecah masalah menjadi bagian-bagian kecil",
+                    "Mengidentifikasi kesamaan atau tren dalam data",
+                    "Menyederhanakan masalah dengan menghilangkan detail yang tidak perlu",
+                    "Membuat langkah-langkah untuk menyelesaikan masalah"
+                ],
+                correctIndex: 1,
+                explanation: "Pengenalan pola dalam berpikir komputasional adalah proses mengidentifikasi kesamaan atau tren dalam data. Dengan mengenali pola, kita dapat memprediksi perilaku, mengidentifikasi aturan, dan menemukan solusi yang dapat diterapkan pada masalah serupa.",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>`,
+                category: "Berpikir Komputasional"
+            },
+            {
+                question: "Manakah dari berikut ini yang merupakan contoh penerapan berpikir komputasional dalam kehidupan sehari-hari?",
+                options: [
+                    "Menonton film",
+                    "Membuat resep masakan dengan langkah-langkah yang jelas",
+                    "Tidur siang",
+                    "Mendengarkan musik"
+                ],
+                correctIndex: 1,
+                explanation: "Membuat resep masakan dengan langkah-langkah yang jelas adalah contoh penerapan berpikir komputasional dalam kehidupan sehari-hari. Resep masakan menggunakan algoritma (langkah-langkah), dekomposisi (memecah proses memasak menjadi tahapan), dan abstraksi (fokus pada detail penting seperti bahan dan waktu).",
+                icon: `<svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>`,
+                category: "Berpikir Komputasional"
+            }
+        ];
+
+        let selectedQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let studentName = "";
+        let studentClass = "";
+        let timerInterval = null;
+        let timeLeft = 20 * 60; // 20 minutes in seconds
+        
+        const welcomeContainer = document.getElementById('welcome-container');
+        const quizMainContainer = document.getElementById('quiz-main-container');
+        const quizContent = document.getElementById('quiz-content');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const submitBtn = document.getElementById('submit-btn');
+        const resultContainer = document.getElementById('result-container');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedbackText = document.getElementById('feedback-text');
+        const restartBtn = document.getElementById('restart-btn');
+        const submitContainer = document.getElementById('submit-container');
+        const studentForm = document.getElementById('student-form');
+        const studentInfo = document.getElementById('student-info');
+        const resultStudentInfo = document.getElementById('result-student-info');
+        const timerElement = document.getElementById('timer');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const questionNav = document.getElementById('question-nav');
+        const showAnswersBtn = document.getElementById('show-answers-btn');
+        const answersReview = document.getElementById('answers-review');
+        const answersContainer = document.getElementById('answers-container');
+        const backToResultsBtn = document.getElementById('back-to-results-btn');
+        const confettiContainer = document.getElementById('confetti-container');
+
+        // Fungsi untuk mengacak array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Fungsi untuk memilih soal secara acak
+        function selectRandomQuestions() {
+            // Mengacak bank soal
+            const shuffledQuestions = shuffleArray([...questionBank]);
+            
+            // Memastikan ada soal dari setiap kategori
+            const categories = ["Pengenalan Komputer", "Sistem Operasi", "Perangkat Keras", "Perangkat Lunak", "Keamanan Data", "Berpikir Komputasional"];
+            const selectedByCategory = {};
+            
+            // Inisialisasi kategori
+            categories.forEach(category => {
+                selectedByCategory[category] = [];
+            });
+            
+            // Kelompokkan soal berdasarkan kategori
+            shuffledQuestions.forEach(question => {
+                if (selectedByCategory[question.category].length < 2) { // Maksimal 2 soal per kategori
+                    selectedByCategory[question.category].push(question);
+                }
+            });
+            
+            // Gabungkan semua soal yang terpilih
+            let selected = [];
+            Object.values(selectedByCategory).forEach(questions => {
+                selected = selected.concat(questions);
+            });
+            
+            // Jika kurang dari 10 soal, tambahkan soal acak dari bank soal
+            if (selected.length < 10) {
+                const remaining = shuffledQuestions.filter(q => !selected.includes(q));
+                selected = selected.concat(remaining.slice(0, 10 - selected.length));
+            }
+            
+            // Jika lebih dari 10 soal, ambil hanya 10 soal pertama
+            selected = selected.slice(0, 10);
+            
+            // Acak lagi urutan soal
+            return shuffleArray(selected);
+        }
+
+        // Fungsi untuk memformat waktu
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Fungsi untuk menjalankan timer
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 20 * 60; // Reset to 20 minutes
+            updateTimerDisplay();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    showResults(); // Auto-submit when time is up
+                }
+            }, 1000);
+        }
+
+        // Fungsi untuk memperbarui tampilan timer
+        function updateTimerDisplay() {
+            timerElement.textContent = formatTime(timeLeft);
+            
+            // Add warning class when less than 5 minutes left
+            if (timeLeft <= 300) {
+                timerElement.classList.add('warning');
+            } else {
+                timerElement.classList.remove('warning');
+            }
+        }
+
+        // Fungsi untuk membuat navigasi soal (dots)
+        function createQuestionNav() {
+            questionNav.innerHTML = '';
+            
+            for (let i = 0; i < selectedQuestions.length; i++) {
+                const dot = document.createElement('div');
+                dot.className = `nav-dot ${i === currentQuestionIndex ? 'active' : ''}`;
+                dot.setAttribute('data-index', i);
+                dot.addEventListener('click', () => {
+                    currentQuestionIndex = i;
+                    renderQuestion();
+                });
+                
+                // Add answered indicator
+                if (userAnswers[i] !== null) {
+                    dot.style.backgroundColor = 'var(--primary)';
+                }
+                
+                questionNav.appendChild(dot);
+            }
+        }
+
+        function renderQuestion() {
+            const question = selectedQuestions[currentQuestionIndex];
+            let optionsHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const isSelected = userAnswers[currentQuestionIndex] === index;
+                optionsHTML += `
+                    <button class="option-btn w-full text-left p-4 rounded-lg mb-3 flex items-start ${isSelected ? 'selected' : ''}" 
+                            data-index="${index}">
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded-full ${isSelected ? 'bg-primary text-white' : 'bg-neutral-light text-neutral-dark'} mr-3 flex-shrink-0">
+                            ${String.fromCharCode(65 + index)}
+                        </span>
+                        <span>${option}</span>
+                    </button>
+                `;
+            });
+
+            quizContent.innerHTML = `
+                <div class="question-card slide-in">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-primary-light p-2 rounded-full mr-3">
+                            ${question.icon}
+                        </div>
+                        <span class="category-badge">${question.category}</span>
+                    </div>
+                    <p class="question-number">Soal ${currentQuestionIndex + 1} dari 10</p>
+                    <h2 class="text-xl font-semibold text-neutral-dark mb-6">
+                        ${question.question}
+                    </h2>
+                    <div class="options-container">
+                        ${optionsHTML}
+                    </div>
+                </div>
+            `;
+
+            // Add event listeners to options
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const selectedIndex = parseInt(btn.getAttribute('data-index'));
+                    userAnswers[currentQuestionIndex] = selectedIndex;
+                    
+                    // Update UI to show selected option
+                    document.querySelectorAll('.option-btn').forEach(option => {
+                        option.classList.remove('selected');
+                        const optionIndex = parseInt(option.getAttribute('data-index'));
+                        const optionIndicator = option.querySelector('span:first-child');
+                        
+                        if (optionIndicator) {
+                            if (optionIndex === selectedIndex) {
+                                optionIndicator.classList.remove('bg-neutral-light', 'text-neutral-dark');
+                                optionIndicator.classList.add('bg-primary', 'text-white');
+                            } else {
+                                optionIndicator.classList.remove('bg-primary', 'text-white');
+                                optionIndicator.classList.add('bg-neutral-light', 'text-neutral-dark');
+                            }
+                        }
+                    });
+                    
+                    btn.classList.add('selected');
+                    updateProgressBar();
+                    createQuestionNav(); // Update navigation dots
+                });
+            });
+
+            // Update navigation buttons
+            prevBtn.style.visibility = currentQuestionIndex === 0 ? 'hidden' : 'visible';
+            nextBtn.style.visibility = currentQuestionIndex === selectedQuestions.length - 1 ? 'hidden' : 'visible';
+            
+            // Update navigation dots
+            createQuestionNav();
+        }
+
+        function updateProgressBar() {
+            const answeredCount = userAnswers.filter(answer => answer !== null).length;
+            const progressPercentage = (answeredCount / selectedQuestions.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+            progressText.textContent = `${answeredCount}/10`;
+            
+            // Enable submit button if all questions are answered
+            submitBtn.disabled = answeredCount !== selectedQuestions.length;
+        }
+
+        function calculateScore() {
+            let score = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer === selectedQuestions[index].correctIndex) {
+                    score++;
+                }
+            });
+            return score;
+        }
+
+        // Fungsi untuk membuat efek confetti
+        function createConfetti(count) {
+            confettiContainer.innerHTML = '';
+            
+            for (let i = 0; i < count; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.animationDelay = `${Math.random() * 5}s`;
+                confetti.style.backgroundColor = ['#4361ee', '#ff6b6b', '#ffd166', '#06d6a0'][Math.floor(Math.random() * 4)];
+                confetti.style.width = `${Math.random() * 10 + 5}px`;
+                confetti.style.height = `${Math.random() * 10 + 5}px`;
+                confettiContainer.appendChild(confetti);
+            }
+        }
+
+        function showResults() {
+            // Stop the timer
+            clearInterval(timerInterval);
+            
+            const score = calculateScore();
+            const percentage = (score / selectedQuestions.length) * 100;
+            
+            scoreDisplay.textContent = `${score}/10`;
+            resultStudentInfo.textContent = `${studentName} - ${studentClass}`;
+            
+            // Provide feedback based on score
+            if (percentage >= 80) {
+                feedbackText.textContent = "Sangat Bagus! Kamu menguasai materi dengan baik.";
+                createConfetti(50); // More confetti for high scores
+            } else if (percentage >= 60) {
+                feedbackText.textContent = "Bagus! Kamu memahami sebagian besar materi.";
+                createConfetti(30);
+            } else if (percentage >= 40) {
+                feedbackText.textContent = "Cukup. Kamu perlu lebih banyak belajar tentang beberapa topik.";
+                createConfetti(15);
+            } else {
+                feedbackText.textContent = "Perlu belajar lebih giat. Jangan menyerah!";
+                createConfetti(5);
+            }
+            
+            // Hide answers review section
+            answersReview.classList.add('hidden');
+            
+            quizMainContainer.classList.remove('active');
+            resultContainer.classList.add('active');
+        }
+
+        function renderAnswersReview() {
+            answersContainer.innerHTML = '';
+            
+            selectedQuestions.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                const isCorrect = userAnswer === question.correctIndex;
+                
+                const answerHTML = `
+                    <div class="bg-white p-5 rounded-xl shadow-sm">
+                        <div class="flex items-center mb-3">
+                            <span class="text-sm font-medium text-neutral mr-2">Soal ${index + 1}</span>
+                            <span class="category-badge text-xs">${question.category}</span>
+                            <span class="ml-auto ${isCorrect ? 'text-green-500' : 'text-red-500'} font-medium">
+                                ${isCorrect ? 'Benar' : 'Salah'}
+                            </span>
+                        </div>
+                        
+                        <h3 class="text-lg font-medium text-neutral-dark mb-4">${question.question}</h3>
+                        
+                        <div class="mb-4">
+                            <p class="text-sm font-medium text-neutral mb-2">Jawaban Anda:</p>
+                            <div class="p-3 rounded-lg ${isCorrect ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}">
+                                ${question.options[userAnswer]}
+                            </div>
+                        </div>
+                        
+                        ${!isCorrect ? `
+                        <div class="mb-4">
+                            <p class="text-sm font-medium text-neutral mb-2">Jawaban Benar:</p>
+                            <div class="p-3 rounded-lg bg-green-50 border border-green-200">
+                                ${question.options[question.correctIndex]}
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div>
+                            <p class="text-sm font-medium text-neutral mb-2">Penjelasan:</p>
+                            <p class="text-neutral-dark">${question.explanation}</p>
+                        </div>
+                    </div>
+                `;
+                
+                answersContainer.innerHTML += answerHTML;
+            });
+        }
+
+        function initializeQuiz() {
+            // Pilih 10 soal acak dari bank soal
+            selectedQuestions = selectRandomQuestions();
+            currentQuestionIndex = 0;
+            userAnswers = Array(selectedQuestions.length).fill(null);
+            
+            // Update info siswa
+            studentInfo.textContent = `${studentName} - ${studentClass}`;
+            
+            // Reset tampilan
+            welcomeContainer.classList.remove('active');
+            quizMainContainer.classList.add('active');
+            resultContainer.classList.remove('active');
+            
+            // Create navigation dots
+            createQuestionNav();
+            
+            // Start the timer
+            startTimer();
+            
+            renderQuestion();
+        }
+
+        // Event listener untuk form siswa
+        studentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nameInput = document.getElementById('student-name');
+            const classInput = document.getElementById('student-class');
+            
+            if (nameInput.value.trim() === '' || classInput.value === '') {
+                alert('Silakan isi nama dan kelas Anda.');
+                return;
+            }
+            
+            studentName = nameInput.value.trim();
+            studentClass = classInput.value;
+            
+            initializeQuiz();
+        });
+
+        // Add event listeners to navigation buttons
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < selectedQuestions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        });
+
+        // Add event listener to submit button
+        submitBtn.addEventListener('click', showResults);
+
+        // Add event listener to restart button
+        restartBtn.addEventListener('click', () => {
+            // Kembali ke layar welcome
+            welcomeContainer.classList.add('active');
+            resultContainer.classList.remove('active');
+            
+            // Reset form
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-class').value = '';
+        });
+        
+        // Add event listener to show answers button
+        showAnswersBtn.addEventListener('click', () => {
+            renderAnswersReview();
+            answersReview.classList.remove('hidden');
+        });
+        
+        // Add event listener to back to results button
+        backToResultsBtn.addEventListener('click', () => {
+            answersReview.classList.add('hidden');
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'962c465800bbef6d',t:'MTc1MzExNzQzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+
+<iframe src="https://your-hosting-url.com/diagnostic-test.html" width="100%" height="800px" frameborder="0"></iframe>
